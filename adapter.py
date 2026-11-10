@@ -769,15 +769,18 @@ def _hermes_feature_tokens() -> Tuple[str, ...]:
     """Feature tokens for the child env — registration truth, not capability."""
     return _REGISTERED_OPTIONAL_FEATURES
 
-# Supported Hermes range for this bundle build. The complete Backend Adapter
-# admission and SessionDB contract is certified against this exact upstream
-# release. In-minor patches remain admissible, but the release watcher creates
-# an immediate recertification obligation for every first-seen 0.21.x patch.
-CERTIFIED_HERMES_VERSION = "0.21.5"
-CERTIFIED_HERMES_TAG = "v2026.9.24"
-CERTIFIED_HERMES_COMMIT = "f97608f178d1ffeca59860195ab7da295f7c8e5f"
-SUPPORTED_HERMES_MIN = (0, 21, 1)
-SUPPORTED_HERMES_MAX_EXCLUSIVE = (0, 22, 0)
+# Supported Hermes range for this bundle build (KE fork port/0.23.1).
+# The complete Backend Adapter admission and SessionDB contract is certified
+# against the running upstream release: Hermes 0.23.1 docker
+# (release-date code 2026.9.24, upstream commit 3b421578588243f920886e6fe79a6faa87ea026e).
+# In-minor 0.23.x patches remain admissible, but every first-seen 0.23.x patch
+# beyond the certified pin creates a recertification obligation (install-stamp
+# facts below were taken from the certified host's install-stamp.json).
+CERTIFIED_HERMES_VERSION = "0.23.1"
+CERTIFIED_HERMES_TAG = "v0.23.1-2026.9.24"
+CERTIFIED_HERMES_COMMIT = "3b421578588243f920886e6fe79a6faa87ea026e"
+SUPPORTED_HERMES_MIN = (0, 23, 1)
+SUPPORTED_HERMES_MAX_EXCLUSIVE = (0, 24, 0)
 
 # Hermes owns these bytes for every OcuClaw-platform session. Keep the section
 # constant: callbacks are re-rendered after 0.21 prompt invalidation/compaction,
@@ -6649,11 +6652,15 @@ def _build_adapter(config: Any):
 
         def _approval_timeout_seconds(self) -> int:
             try:
-                from tools.approval import _get_approval_timeout
+                # Hermes 0.23.x moved the accessor to tools.approval_context;
+                # 0.21.x had it in tools.approval. Try the current home first,
+                # then the legacy one, preserving the host's malformed-config
+                # fallback instead of pinning either value here.
+                try:
+                    from tools.approval_context import _get_approval_timeout
+                except ImportError:  # legacy 0.21.x home
+                    from tools.approval import _get_approval_timeout
 
-                # Hermes 0.20 owns the effective default and operator override;
-                # using its accessor also preserves the host's malformed-
-                # config fallback instead of pinning either value here.
                 timeout = _get_approval_timeout()
                 return max(0, int(timeout))
             except Exception:  # noqa: BLE001

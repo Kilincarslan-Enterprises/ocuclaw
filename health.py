@@ -38,11 +38,13 @@ PLATFORM_NAME = "ocuclaw"
 BUNDLE_DIR = Path(__file__).resolve().parent
 DEFAULT_RUNTIME_ENTRY = BUNDLE_DIR / "dist-cjs" / "runtime" / "hermes-runtime-entry.cjs"
 
-CERTIFIED_HERMES_VERSION = "0.21.5"
-CERTIFIED_HERMES_TAG = "v2026.9.24"
-CERTIFIED_HERMES_COMMIT = "f97608f178d1ffeca59860195ab7da295f7c8e5f"
-SUPPORTED_HERMES_MIN = (0, 21, 1)
-SUPPORTED_HERMES_MAX_EXCLUSIVE = (0, 22, 0)
+# KE fork port/0.23.1: same certified pair as adapter.py (Hermes 0.23.1 docker,
+# release-date code 2026.9.24, upstream commit 3b421578588243f920886e6fe79a6faa87ea026e).
+CERTIFIED_HERMES_VERSION = "0.23.1"
+CERTIFIED_HERMES_TAG = "v0.23.1-2026.9.24"
+CERTIFIED_HERMES_COMMIT = "3b421578588243f920886e6fe79a6faa87ea026e"
+SUPPORTED_HERMES_MIN = (0, 23, 1)
+SUPPORTED_HERMES_MAX_EXCLUSIVE = (0, 24, 0)
 
 # The ONE user id the adapter stamps on every wearer-originated event
 # (adapter.py `_build_message_event` → `build_source`). Continue here (#2509)
@@ -365,12 +367,18 @@ def supported_hermes_range() -> str:
 # install that pulled newer main) still carries the date of the release it
 # descends from. Only a date listed here identifies a version, so an unknown or
 # newer date stays unidentified and is refused.
+# KE fork port/0.23.1: the certified 0.23.1 docker host self-identifies with the
+# same release-date code 2026.9.24 as the retired 0.21.5 pin (hermes_cli
+# ships it as the frozen ``__release_date__`` literal). Since this fork is
+# certified only against 0.23.1, the shared date maps to the certified
+# baseline here; the 0.21.x rows stay for historical hosts of this fork lineage.
 HERMES_RELEASE_DATES = {
     "2026.9.7": "0.21.1",
     "2026.9.11": "0.21.2",
     "2026.9.14": "0.21.3",
     "2026.9.21": "0.21.4",
-    "2026.9.24": "0.21.5",
+    # 0.21.5 and 0.23.1 share the 2026.9.24 release-date code; the last row wins.
+    "2026.9.24": "0.23.1",
 }
 
 HERMES_VERSION_UNKNOWN_HINT = (

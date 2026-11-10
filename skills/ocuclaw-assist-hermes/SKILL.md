@@ -545,7 +545,7 @@ user-relevant connection proofs.
 
 - [ ] User level recorded
 - [ ] Even G2 / Even Hub readiness confirmed
-- [ ] Hermes version is within `>=0.21.1,<0.22.0`
+- [ ] Hermes version is within `>=0.23.1,<0.24.0`
 - [ ] Installation source recorded accurately
 - [ ] Secure relay access ready
 - [ ] OcuClaw conversational tool progress is off (`config get` reports `false`)
@@ -667,10 +667,13 @@ secondary-profile rejection, not merely because multiple profiles exist.
 
 ## Shipping posture that must remain truthful
 
-- Supported Hermes is exactly `>=0.21.1,<0.22.0` (Hermes 0.21.1 and later 0.21.x);
-  the certified baseline is `0.21.5`.
+- Supported Hermes is exactly `>=0.23.1,<0.24.0` (Hermes 0.23.1 and later 0.23.x);
+  the certified baseline is `0.23.1`.
 - Install and update use the private GitHub bundle `ocuclaw/ocuclaw`.
   Beta testers need repository access and Git HTTPS authentication on this host.
+  This KE fork (`Kilincarslan-Enterprises/ocuclaw`, branch `port/0.23.1`) is
+  certified for Hermes 0.23.1 docker; restoring upstream tip is
+  `hermes plugins update ocuclaw`.
 - The relay defaults to `wsBind` `127.0.0.1` and `wsPort` `47801`, loopback
   only; the host has one OcuClaw-managed Tailscale Serve route on `:8446`.
 - A gateway that has to be POKED — a config key flipped, a stand-in model, a
