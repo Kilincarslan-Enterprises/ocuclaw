@@ -9,7 +9,10 @@ import shlex
 from pathlib import Path
 from typing import Any, Optional
 
-import yaml
+# KE port/0.23.1: bare `import yaml` resolves on Hermes 0.21.x (PyYAML in the
+# host venv) but not on 0.23.1 (ruamel-only, hermes_yaml shim). The bundle's
+# own compat shim wins on both hosts.
+from .yaml_compat import yaml
 
 from .profiles_report import bundle_version
 
